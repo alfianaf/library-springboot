@@ -1,0 +1,63 @@
+package com.libraryreact.libraryspringboot.models.entity;
+
+import java.sql.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "user_detail")
+public class UserDetail {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column
+    private String nama;
+
+    @Column
+    private String nik;
+
+    @Column
+    private String tempatLahir;
+
+    @Column
+    private Date tanggalLahir;
+
+    @Column
+    private String alamat;
+
+    @Column
+    private String telp;
+
+    @Column
+    private String kelamin;
+
+    @Column
+    private Integer saldo;
+
+    @Column
+    private String foto;
+
+    @Column
+    private Integer isActive;
+    @OneToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private Users user;
+
+    public UserDetail(String nik, Date tanggalLahir) {
+        this.nik = nik;
+        this.tanggalLahir = tanggalLahir;
+    }
+}
