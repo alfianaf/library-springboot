@@ -3,8 +3,8 @@ package com.libraryreact.libraryspringboot.controllers.dataMasterController;
 import java.util.List;
 
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
-import com.libraryreact.libraryspringboot.models.dto.dataMasterDto.GenreDto;
-import com.libraryreact.libraryspringboot.service.dataMasterService.GenreService;
+import com.libraryreact.libraryspringboot.models.dto.dataMasterDto.PenerbitDto;
+import com.libraryreact.libraryspringboot.service.dataMasterService.PenerbitService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,27 +19,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/genre")
-public class GenreController {
+@RequestMapping("api/v1/penerbit")
+public class PenerbitController {
     @Autowired
-    private GenreService genreService;
+    private PenerbitService penerbitService;
 
-    // Insert new genre
+    // Insert new Penerbit
     @PostMapping("/add")
-    public ResponseEntity<?> addGenre(@RequestBody GenreDto dto){
+    public ResponseEntity<?> addPenerbit(@RequestBody PenerbitDto dto){
         try {
-            StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            if(dto.getNamaGenre().isEmpty() == true){
+            StatusMessageDto<PenerbitDto> response = new StatusMessageDto<>();
+            if(dto.getNamaPenerbit().isEmpty() == true){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre kosong!");
+                response.setMessage("Penerbit kosong!");
                 response.setData(dto);
                 return ResponseEntity.badRequest().body(response);
             }
 
-            GenreDto genreDto = genreService.create(dto);
+            PenerbitDto penerbitDto = penerbitService.create(dto);
             response.setStatus(HttpStatus.CREATED.value());
-            response.setMessage("Genre berhasil ditambahkan!");
-            response.setData(genreDto);
+            response.setMessage("Penerbit berhasil ditambahkan!");
+            response.setData(penerbitDto);
             return ResponseEntity.badRequest().body(response);
    
         } catch (Exception e) {
@@ -47,22 +47,22 @@ public class GenreController {
         }
     }
 
-    // Get all genre without is deleted status
+    // Get all Penerbit without is deleted status
     @GetMapping("/all")
-    public ResponseEntity<?> getAllGenre(){
+    public ResponseEntity<?> getAllPenerbit(){
         try {
-            StatusMessageDto<List<GenreDto>> response = new StatusMessageDto<>();
-            List<GenreDto> genreDtos = genreService.getAll();
-            if(genreDtos.size() == 0){
+            StatusMessageDto<List<PenerbitDto>> response = new StatusMessageDto<>();
+            List<PenerbitDto> penerbitDtos = penerbitService.getAll();
+            if(penerbitDtos.size() == 0){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Daftar genre kosong!");
-                response.setData(genreDtos);
+                response.setMessage("Daftar Penerbit kosong!");
+                response.setData(penerbitDtos);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Daftar genre ditemukan!");
-                response.setData(genreDtos);
+                response.setMessage("Daftar Penerbit ditemukan!");
+                response.setData(penerbitDtos);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {
@@ -70,22 +70,22 @@ public class GenreController {
         }
     }
 
-    // Get by id genre without is deleted status
+    // Get by id Penerbit without is deleted status
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> getByIdGenre(@PathVariable Integer id){
+    public ResponseEntity<?> getByIdPenerbit(@PathVariable Integer id){
         try {
-            StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            GenreDto genreDto = genreService.getById(id);
-            if(genreDto == null){
+            StatusMessageDto<PenerbitDto> response = new StatusMessageDto<>();
+            PenerbitDto penerbitDto = penerbitService.getById(id);
+            if(penerbitDto == null){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre tidak ditemukan!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit tidak ditemukan!");
+                response.setData(penerbitDto);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Genre ditemukan!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit ditemukan!");
+                response.setData(penerbitDto);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {
@@ -93,22 +93,22 @@ public class GenreController {
         }
     }
 
-    // Get by id genre without is deleted status
-    @GetMapping("/name/{namaGenre}")
-    public ResponseEntity<?> getByNamaGenre(@PathVariable String namaGenre){
+    // Get by id Penerbit without is deleted status
+    @GetMapping("/name/{namaPenerbit}")
+    public ResponseEntity<?> getByNamaPenerbit(@PathVariable String namaPenerbit){
         try {
-            StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            GenreDto genreDto = genreService.getByNama(namaGenre);
-            if(genreDto == null){
+            StatusMessageDto<PenerbitDto> response = new StatusMessageDto<>();
+            PenerbitDto penerbitDto = penerbitService.getByNama(namaPenerbit);
+            if(penerbitDto == null){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre tidak ditemukan!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit tidak ditemukan!");
+                response.setData(penerbitDto);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Genre ditemukan!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit ditemukan!");
+                response.setData(penerbitDto);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {
@@ -116,29 +116,29 @@ public class GenreController {
         }
     }
 
-    // Update genre by id and show result without is deleted status
+    // Update Penerbit by id and show result without is deleted status
     @PutMapping("/edit")
-    public ResponseEntity<?> editGenre(@RequestBody GenreDto dto){
+    public ResponseEntity<?> editPenerbit(@RequestBody PenerbitDto dto){
         try {
-            StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            if(dto.getNamaGenre().isEmpty() == true){
+            StatusMessageDto<PenerbitDto> response = new StatusMessageDto<>();
+            if(dto.getNamaPenerbit().isEmpty() == true){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre kosong!");
+                response.setMessage("Penerbit kosong!");
                 response.setData(dto);
                 return ResponseEntity.badRequest().body(response);
             }
             
-            GenreDto genreDto = genreService.update(dto);
-            if(genreDto == null){
+            PenerbitDto penerbitDto = penerbitService.update(dto);
+            if(penerbitDto == null){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre gagal diubah!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit gagal diubah!");
+                response.setData(penerbitDto);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Genre berhasil diubah!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit berhasil diubah!");
+                response.setData(penerbitDto);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {
@@ -146,22 +146,22 @@ public class GenreController {
         }
     }
 
-    // Remove genre by id
+    // Remove Penerbit by id
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> removeGenre(@PathVariable Integer id){
+    public ResponseEntity<?> removePenerbit(@PathVariable Integer id){
         try {
-            StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            GenreDto genreDto = genreService.delete(id);
-            if(genreDto == null){
+            StatusMessageDto<PenerbitDto> response = new StatusMessageDto<>();
+            PenerbitDto penerbitDto = penerbitService.delete(id);
+            if(penerbitDto == null){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Genre gagal dihapus!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit gagal dihapus!");
+                response.setData(penerbitDto);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Genre berhasil dihapus!");
-                response.setData(genreDto);
+                response.setMessage("Penerbit berhasil dihapus!");
+                response.setData(penerbitDto);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {

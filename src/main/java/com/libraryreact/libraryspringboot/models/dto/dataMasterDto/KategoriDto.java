@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KategoriDto {
+    private Integer id;
     private String kodeKategori;
     private String namaKategori;
 }

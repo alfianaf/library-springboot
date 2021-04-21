@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer>{
-    // cari berdasrkan id yang belum dihapus
-    @Query(value = "select * from genre where is_deleted = 1 and id = ?", nativeQuery = true)
+    // cari berdasarkan id yang belum dihapus
+    @Query(value = "select * from genre where is_deleted = 0 and id = ?", nativeQuery = true)
     public Genre findByIdGenre(Integer id);
 
     // tampil semua data berdasarkan status is deleted - nya
     public List<Genre> findByIsDeleted(boolean isDeleted);
 
     // cari berdasarkan nama genre dan yang belum dihapus
-    @Query(value = "select * from genre where is_deleted = 1 and nama_genre = ?", nativeQuery = true)
+    @Query(value = "select * from genre where is_deleted = 0 and nama_genre = ?", nativeQuery = true)
     public Genre findByNamaGenre(String namaGenre);
 }
