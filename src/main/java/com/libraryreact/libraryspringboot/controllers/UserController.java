@@ -1,26 +1,33 @@
 package com.libraryreact.libraryspringboot.controllers;
 
-import java.util.Base64;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.libraryreact.libraryspringboot.config.MD5Generator;
+import com.libraryreact.libraryspringboot.config.JwtUtils;
+import com.libraryreact.libraryspringboot.models.dto.JWTResponse;
+import com.libraryreact.libraryspringboot.models.dto.LoginDto;
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
 import com.libraryreact.libraryspringboot.models.dto.UsersDto;
-import com.libraryreact.libraryspringboot.models.entity.UserDetail;
+import com.libraryreact.libraryspringboot.models.entity.ERole;
+import com.libraryreact.libraryspringboot.models.entity.Role;
 import com.libraryreact.libraryspringboot.models.entity.Users;
+import com.libraryreact.libraryspringboot.repository.RoleRepository;
 import com.libraryreact.libraryspringboot.repository.UserDetailRepository;
 import com.libraryreact.libraryspringboot.repository.UsersRepository;
+import com.libraryreact.libraryspringboot.service.UserDetailService;
 import com.libraryreact.libraryspringboot.service.UsersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,83 +39,120 @@ public class UserController {
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
-    private UserDetailRepository userDetailRepository;
-    @Autowired
     private UsersService usersService;
+    @Autowired
+    private PasswordEncoder passEncoder;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private AuthenticationManager authManager;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Users dto) {
+    public ResponseEntity<?> register(@RequestBody UsersDto userDto) {
         StatusMessageDto<Users> response = new StatusMessageDto<>();
+        // checking user exist or not
+        Users user = usersRepository.findByUsername(userDto.getUsername());
+        if (user != null) {
+            response.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            response.setMessage("Username is exist!");
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(response);
+        }
 
+        // register account
         try {
-            dto.setPassword(MD5Generator.generate(dto.getPassword()));
-            Users userCreate = usersService.register(dto);
+            Users userCreated = new Users(userDto.getUsername(), passEncoder.encode(userDto.getPassword()));
+
+            Set<String> roleStr = userDto.getRole();
+            Set<Role> roles = new HashSet<>();
+
+            roleStr.forEach(role -> {
+                switch (role) {
+                case "admin":
+                    try {
+                        Role adminRole = roleRepository.findByName(ERole.ADMIN);
+                        roles.add(adminRole);
+                    } catch (RuntimeException e) {
+                        throw new RuntimeException("Role not found!");
+                    }
+                    break;
+
+                case "peminjam":
+                    try {
+                        Role userRole = roleRepository.findByName(ERole.PEMINJAM);
+                        roles.add(userRole);
+                    } catch (RuntimeException e) {
+                        // TODO: handle exception
+                        throw new RuntimeException("Role not found!");
+                    }
+                    break;
+
+                default:
+                    try {
+                        Role guestRole = roleRepository.findByName(ERole.PEMINJAM);
+                        roles.add(guestRole);
+                    } catch (RuntimeException e) {
+                        // TODO: handle exception
+                        throw new RuntimeException("Role not found!");
+                    }
+                    break;
+                }
+            });
+
+            userCreated.setRoles(roles);
+            userCreated.setIsActive(1);
+
+            // save to repo
+            usersService.register(userCreated, userDto);
 
             response.setStatus(HttpStatus.CREATED.value());
-            response.setMessage("User Berhasil Dibuat!");
-            response.setData(userCreate);
-            return ResponseEntity.ok(response);
+            response.setMessage("User created!");
+            response.setData(userCreated);
+
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
+            // TODO: handle exception
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Error" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UsersDto usersDto) {
-        StatusMessageDto<String> response = new StatusMessageDto<>();
-        try {
-            Users user = usersService.login(usersDto.getUsername(), MD5Generator.generate(usersDto.getPassword()));
+    public ResponseEntity<?> login(@RequestBody LoginDto dto) {
+        StatusMessageDto response = new StatusMessageDto<>();
+        Users user = usersRepository.findByUsername(dto.getUsername());
 
-            if (user == null) {
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Login Gagal!");
-                return ResponseEntity.badRequest().body(response);
+        if (user.getIsActive().equals(1)) {
+            try {
+                // autentikasi user
+                Authentication authentication = authManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // generate token
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                // get user principal
+                UserDetailService userDetailService = (UserDetailService) authentication.getPrincipal();
+                // get role
+                Set<String> roles = userDetailService.getAuthorities().stream().map(role -> role.getAuthority())
+                        .collect(Collectors.toSet());
+
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Login success!");
+                response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles));
+
+                return ResponseEntity.ok().body(response);
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                response.setMessage("Error: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
             }
-
-            String baseString = user.getUsername() + ":" + user.getPassword();
-            String token = Base64.getEncoder().encodeToString(baseString.getBytes());
-
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Login Berhasil!");
-            response.setData(token);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Error" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setMessage("User tidak ditemukan");
+        return ResponseEntity.badRequest().body(response);
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAll() {
-        List<Users> user = usersRepository.findAll();
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/get-detail/{id}")
-    public ResponseEntity<?> getDetail(@PathVariable Integer id) {
-        Users user = usersRepository.findById(id).get();
-        UserDetail userDetail = userDetailRepository.findById(user.getId() + 1).get();
-
-        return ResponseEntity.ok(userDetail);
-    }
-
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> edit(@PathVariable Integer id, @RequestBody UsersDto usersDto) {
-        StatusMessageDto<Users> result = new StatusMessageDto<>();
-
-        try {
-            return usersService.edit(id, usersDto);
-        } catch (Exception e) {
-            result.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        return usersService.delete(id);
-    }
 }

@@ -56,8 +56,18 @@ public class UserDetail {
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private Users user;
 
-    public UserDetail(String nik, Date tanggalLahir) {
+    public UserDetail(String nama, String nik, String tempatLahir, Date tanggalLahir, String alamat, String telp,
+            String kelamin, Integer saldo, String foto, Integer isActive) {
+        this.nama = nama;
         this.nik = nik;
+        this.tempatLahir = tempatLahir;
         this.tanggalLahir = tanggalLahir;
+        this.alamat = alamat;
+        this.telp = telp;
+        this.kelamin = kelamin;
+        this.saldo = saldo;
+        this.foto = foto;
+        this.isActive = isActive;
     }
+
 }

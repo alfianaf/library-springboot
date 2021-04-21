@@ -6,13 +6,13 @@ import com.libraryreact.libraryspringboot.models.entity.Users;
 import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
-    public ResponseEntity<?> regist(UsersDto usersDto);
-
     public ResponseEntity<?> edit(Integer id, UsersDto usersDto);
+
+    public ResponseEntity<?> tambahSaldo(Integer id, UsersDto usersDto);
 
     public ResponseEntity<?> delete(Integer id);
 
-    public Users register(Users user);
+    public Users register(Users user, UsersDto userDto);
 
     public Users login(String username, String password);
 }

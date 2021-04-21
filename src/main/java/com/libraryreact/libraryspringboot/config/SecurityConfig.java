@@ -1,43 +1,63 @@
 package com.libraryreact.libraryspringboot.config;
 
-import com.libraryreact.libraryspringboot.service.UserServiceImpl;
+import com.libraryreact.libraryspringboot.service.UserDetailServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    UserServiceImpl userService;
+    private UserDetailServiceImpl userService;
 
+    @Autowired
+    private AuthEntryPoint authEntryPoint;
+
+    @Bean
+    public CorsConfig authTokenFilter() {
+        return new CorsConfig();
+    }
+
+    // UNTUK MEMBENTUK AUTENTIKASI USER
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // super.configure(auth);
+        // TODO Auto-generated method stub
         auth.userDetailsService(userService);
     }
 
+    // END POINT YANG DIIZINKAN SETELAH DI-AUTENTIKASI
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // super.configure(http);
-        http.authorizeRequests().antMatchers("/").permitAll().antMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                .anyRequest().fullyAuthenticated().and().httpBasic().and().csrf().disable();
-        http.addFilterBefore(new CorsConfig(), ChannelProcessingFilter.class);
+        // TODO Auto-generated method stub
+        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+                .antMatchers("/").permitAll().antMatchers("/auth/**").permitAll().anyRequest().fullyAuthenticated();
 
+        http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @SuppressWarnings("deprecation")
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        // TODO Auto-generated method stub
+        return super.authenticationManager();
     }
 
+    // PASSWORD ENCODER
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
