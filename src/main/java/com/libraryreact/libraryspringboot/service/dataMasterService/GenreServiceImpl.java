@@ -45,14 +45,24 @@ public class GenreServiceImpl implements GenreService{
     @Override
     public GenreDto getById(Integer id) {
         Genre genre = genreRepo.findByIdGenre(id);
-        return new GenreDto(genre.getId(), genre.getNamaGenre());
+        if(genre == null){
+            return null;
+        }
+        else{
+            return new GenreDto(genre.getId(), genre.getNamaGenre());
+        }
     }
 
     // Get genre by name (return without is deleted status)
     @Override
     public GenreDto getByNama(String namaGenre) {
         Genre genre = genreRepo.findByNamaGenre(namaGenre);
-        return new GenreDto(genre.getId(), genre.getNamaGenre());
+        if(genre == null){
+            return null;
+        }
+        else{
+            return new GenreDto(genre.getId(), genre.getNamaGenre());
+        }
     }
 
     // Update name of genre (return without is deleted status)

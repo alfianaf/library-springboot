@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LokasiDto {
+    private Integer id;
     private String kodeLokasi;
     private String keteranganLokasi;
 
