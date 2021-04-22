@@ -1,5 +1,7 @@
 package com.libraryreact.libraryspringboot.repository;
 
+import java.util.List;
+
 import com.libraryreact.libraryspringboot.models.dto.UsersDto;
 import com.libraryreact.libraryspringboot.models.entity.UserDetail;
 
