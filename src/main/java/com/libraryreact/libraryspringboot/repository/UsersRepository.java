@@ -1,5 +1,7 @@
 package com.libraryreact.libraryspringboot.repository;
 
+import java.util.List;
+
 import com.libraryreact.libraryspringboot.models.entity.Users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +14,9 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     @Query(value = "select username from users where username = ?", nativeQuery = true)
     public String findUsernameByUsername(String username);
+
+    @Query(value = "select * from users where is_active = 1 and id = ?", nativeQuery = true)
+    public Users findActiveById(Integer id);
+
+    public List<Users> findByIsActive(Boolean isActive);
 }

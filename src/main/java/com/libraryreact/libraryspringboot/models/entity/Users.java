@@ -32,7 +32,7 @@ public class Users {
     private String password;
 
     @Column
-    private Integer isActive;
+    private Boolean isActive;
 
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))

@@ -101,7 +101,7 @@ public class UserController {
             });
 
             userCreated.setRoles(roles);
-            userCreated.setIsActive(1);
+            userCreated.setIsActive(true);
 
             // save to repo
             usersService.register(userCreated, userDto);
@@ -124,8 +124,8 @@ public class UserController {
         StatusMessageDto response = new StatusMessageDto<>();
         Users user = usersRepository.findByUsername(dto.getUsername());
 
-        if (user.getIsActive().equals(1)) {
-            try {
+        try {
+            if (user.getIsActive().equals(true)) {
                 // autentikasi user
                 Authentication authentication = authManager
                         .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
@@ -144,15 +144,20 @@ public class UserController {
                 response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles));
 
                 return ResponseEntity.ok().body(response);
-            } catch (Exception e) {
-                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                response.setMessage("Error: " + e.getMessage());
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
             }
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("User tidak ditemukan");
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            // response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            // response.setMessage("Error: " + e.getMessage());
+            // return
+            // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Username atau Password Salah");
+            return ResponseEntity.badRequest().body(response);
         }
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.setMessage("User tidak ditemukan");
-        return ResponseEntity.badRequest().body(response);
+
     }
 
 }

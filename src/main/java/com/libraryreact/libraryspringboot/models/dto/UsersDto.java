@@ -21,7 +21,7 @@ public class UsersDto {
     private String alamat;
     private String telp;
     private String kelamin;
-    private Integer saldo;
+    private Double saldo;
     private String foto;
     private Integer isActive;
 

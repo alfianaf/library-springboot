@@ -2,6 +2,7 @@ package com.libraryreact.libraryspringboot.service;
 
 import javax.transaction.Transactional;
 
+import com.libraryreact.libraryspringboot.models.dto.SaldoDto;
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
 import com.libraryreact.libraryspringboot.models.dto.UsersDto;
 import com.libraryreact.libraryspringboot.models.entity.UserDetail;
@@ -58,7 +59,18 @@ public class UserDetailServiceImpl implements UsersService, UserDetailsService {
 
     @Override
     public ResponseEntity<?> delete(Integer id) {
-        return null;
+        StatusMessageDto<Users> response = new StatusMessageDto<>();
+
+        Users user = usersRepository.findById(id).get();
+        UserDetail detailUser = userDetailRepository.findDetailByUserId(user.getId());
+        detailUser.setIsActive(false);
+        user.setIsActive(false);
+        userDetailRepository.save(detailUser);
+        usersRepository.save(user);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("User Berhasil Dihapus!");
+        response.setData(user);
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -69,13 +81,13 @@ public class UserDetailServiceImpl implements UsersService, UserDetailsService {
         detailUser.setFoto(userDto.getFoto());
         detailUser.setKelamin(userDto.getKelamin());
         detailUser.setNik(userDto.getNik());
-        detailUser.setSaldo(0);
+        detailUser.setSaldo(0.0);
         detailUser.setTanggalLahir(userDto.getTanggalLahir());
         detailUser.setTelp(userDto.getTelp());
         detailUser.setTempatLahir(userDto.getTempatLahir());
         detailUser.setUser(user);
 
-        detailUser.setIsActive(1);
+        detailUser.setIsActive(true);
         usersRepository.save(user);
 
         userDetailRepository.save(detailUser);
@@ -89,15 +101,15 @@ public class UserDetailServiceImpl implements UsersService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<?> tambahSaldo(Integer id, UsersDto userDto) {
+    public ResponseEntity<?> tambahSaldo(Integer id, SaldoDto saldoDto) {
         StatusMessageDto<UserDetail> response = new StatusMessageDto<>();
 
         Users user = usersRepository.findById(id).get();
         UserDetail detailUser = userDetailRepository.findDetailByUserId(user.getId());
-        detailUser.setSaldo(detailUser.getSaldo() + userDto.getSaldo());
+        detailUser.setSaldo(detailUser.getSaldo() + saldoDto.getSaldo());
         userDetailRepository.save(detailUser);
         response.setStatus(HttpStatus.OK.value());
-        response.setMessage("Saldo sejumlah Rp. " + userDto.getSaldo()
+        response.setMessage("Saldo sejumlah Rp. " + saldoDto.getSaldo()
                 + " berhasil ditambahkan, saldo akhir anda : Rp. " + detailUser.getSaldo());
         response.setData(detailUser);
         return ResponseEntity.ok(response);

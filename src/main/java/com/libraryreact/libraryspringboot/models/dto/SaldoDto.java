@@ -1,5 +1,6 @@
 package com.libraryreact.libraryspringboot.models.dto;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -9,8 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterDto {
-    private String username;
-    private String password;
-    private Set<String> role;
+public class SaldoDto {
+    private Double kredit;
+    private Double debit;
+    private Double saldo;
+    private Timestamp tanggal;
+    private String transaksi;
 }

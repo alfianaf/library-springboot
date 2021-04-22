@@ -45,19 +45,19 @@ public class UserDetail {
     private String kelamin;
 
     @Column
-    private Integer saldo;
+    private Double saldo;
 
     @Column
     private String foto;
 
     @Column
-    private Integer isActive;
+    private Boolean isActive;
     @OneToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private Users user;
 
     public UserDetail(String nama, String nik, String tempatLahir, Date tanggalLahir, String alamat, String telp,
-            String kelamin, Integer saldo, String foto, Integer isActive) {
+            String kelamin, Double saldo, String foto, Boolean isActive) {
         this.nama = nama;
         this.nik = nik;
         this.tempatLahir = tempatLahir;
