@@ -16,6 +16,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     public String findUsernameByUsername(String username);
 
     @Query(value = "select * from users where is_active = 1 and id = ?", nativeQuery = true)
+
     public Users findActiveById(Integer id);
 
     public List<Users> findByIsActive(Boolean isActive);
