@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // TODO Auto-generated method stub
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/").permitAll().antMatchers("/auth/**").permitAll().anyRequest().fullyAuthenticated();
+                .antMatchers("/").permitAll().antMatchers("/**").permitAll().anyRequest().fullyAuthenticated();
 
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
