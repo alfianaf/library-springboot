@@ -82,7 +82,7 @@ public class UserController {
                         Role userRole = roleRepository.findByName(ERole.PEMINJAM);
                         roles.add(userRole);
                     } catch (RuntimeException e) {
-                        // TODO: handle exception
+                        // handle exception
                         throw new RuntimeException("Role not found!");
                     }
                     break;
@@ -92,7 +92,7 @@ public class UserController {
                         Role guestRole = roleRepository.findByName(ERole.PEMINJAM);
                         roles.add(guestRole);
                     } catch (RuntimeException e) {
-                        // TODO: handle exception
+                        // handle exception
                         throw new RuntimeException("Role not found!");
                     }
                     break;
@@ -111,7 +111,7 @@ public class UserController {
 
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            // TODO: handle exception
+            // handle exception
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);

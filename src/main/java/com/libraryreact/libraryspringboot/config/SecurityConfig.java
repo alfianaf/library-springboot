@@ -33,14 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // UNTUK MEMBENTUK AUTENTIKASI USER
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // TODO Auto-generated method stub
         auth.userDetailsService(userService);
     }
 
     // END POINT YANG DIIZINKAN SETELAH DI-AUTENTIKASI
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO Auto-generated method stub
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers("/").permitAll().antMatchers("/**").permitAll().anyRequest().fullyAuthenticated();
@@ -51,7 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
-        // TODO Auto-generated method stub
         return super.authenticationManager();
     }
 
