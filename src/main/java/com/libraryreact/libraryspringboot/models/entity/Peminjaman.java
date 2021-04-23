@@ -50,8 +50,8 @@ public class Peminjaman {
     @JoinColumn(name = "pencatatId", referencedColumnName = "id")
     private Users pencatat;
 
-    // @ManyToOne
-    // @JoinColumn(name = "kodeBuku", referencedColumnName = "kode_buku")
-    @Column(unique = true, nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "kodeBuku", referencedColumnName = "kode_buku")
+    // @Column(unique = true, nullable = false)
     private String kodeBuku;
 }
