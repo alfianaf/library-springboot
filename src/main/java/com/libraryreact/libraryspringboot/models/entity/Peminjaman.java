@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.libraryreact.libraryspringboot.models.entity.dataBuku.KodeBuku;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +33,7 @@ public class Peminjaman {
     private Date batasPinjam;
 
     @Column
-    private Date tanggalPengembalian;
+    private Timestamp tanggalPengembalian;
 
     @Column
     private Double harga;
@@ -51,7 +53,7 @@ public class Peminjaman {
     private Users pencatat;
 
     @ManyToOne
-    @JoinColumn(name = "kodeBuku", referencedColumnName = "kode_buku")
+    @JoinColumn(name = "kodeBuku", referencedColumnName = "kodeBuku")
     // @Column(unique = true, nullable = false)
-    private String kodeBuku;
+    private KodeBuku kodeBuku;
 }
