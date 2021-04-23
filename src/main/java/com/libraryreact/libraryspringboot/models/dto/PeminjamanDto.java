@@ -3,6 +3,8 @@ package com.libraryreact.libraryspringboot.models.dto;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.libraryreact.libraryspringboot.models.entity.dataBuku.KodeBuku;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +19,5 @@ public class PeminjamanDto {
     private Double harga;
     private Double denda;
     private boolean isFinished;
+    private KodeBuku kodeBuku; // nyimpen kode buku yang dipinjam
 }
