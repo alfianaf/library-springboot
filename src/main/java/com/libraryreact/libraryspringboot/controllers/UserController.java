@@ -1,6 +1,7 @@
 package com.libraryreact.libraryspringboot.controllers;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
 import com.libraryreact.libraryspringboot.models.dto.UsersDto;
 import com.libraryreact.libraryspringboot.models.entity.ERole;
 import com.libraryreact.libraryspringboot.models.entity.Role;
+import com.libraryreact.libraryspringboot.models.entity.UserDetail;
 import com.libraryreact.libraryspringboot.models.entity.Users;
 import com.libraryreact.libraryspringboot.repository.RoleRepository;
 import com.libraryreact.libraryspringboot.repository.UsersRepository;
@@ -82,7 +84,7 @@ public class UserController {
                         Role userRole = roleRepository.findByName(ERole.PEMINJAM);
                         roles.add(userRole);
                     } catch (RuntimeException e) {
-                        // handle exception
+                        // TODO: handle exception
                         throw new RuntimeException("Role not found!");
                     }
                     break;
@@ -92,7 +94,7 @@ public class UserController {
                         Role guestRole = roleRepository.findByName(ERole.PEMINJAM);
                         roles.add(guestRole);
                     } catch (RuntimeException e) {
-                        // handle exception
+                        // TODO: handle exception
                         throw new RuntimeException("Role not found!");
                     }
                     break;
@@ -111,7 +113,6 @@ public class UserController {
 
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            // handle exception
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
@@ -137,10 +138,11 @@ public class UserController {
                 // get role
                 Set<String> roles = userDetailService.getAuthorities().stream().map(role -> role.getAuthority())
                         .collect(Collectors.toSet());
+                Integer id = jwtUtils.getIdFromToken(jwt);
 
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Login success!");
-                response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles));
+                response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles, id));
 
                 return ResponseEntity.ok().body(response);
             }

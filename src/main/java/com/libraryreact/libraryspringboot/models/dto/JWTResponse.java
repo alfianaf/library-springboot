@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JWTResponse {
     private String token;
-    private String email;
+    private Integer id;
+    private String username;
     private Set<String> role;
     private String type = "Bearer";
 
-    public JWTResponse(String token, String email, Set<String> role) {
+    public JWTResponse(String token, String username, Set<String> role, Integer id) {
         this.token = token;
-        this.email = email;
+        this.username = username;
         this.role = role;
+        this.id = id;
     }
 }
