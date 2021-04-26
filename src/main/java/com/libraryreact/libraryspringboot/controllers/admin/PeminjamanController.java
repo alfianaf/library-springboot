@@ -24,7 +24,7 @@ public class PeminjamanController {
     public ResponseEntity<?> sewa(@RequestBody PeminjamanDto dto){
         try {
             StatusMessageDto<PeminjamanDto> response = peminjamanService.sewaBuku(dto);
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
