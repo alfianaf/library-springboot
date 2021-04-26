@@ -107,22 +107,26 @@ public class PeminjamanServiceImpl implements PeminjamanService {
 
         KodeBuku kodeBuku = kodeBukuRepo.findByKodeBukuAvailable(dto.getKodeBuku().getKodeBuku());
         Users peminjam = usersRepo.findByIdUser(dto.getPeminjam().getId());
+        UserDetail peminjamDetail = userDetailRepo.findDetailByUserId(peminjam.getId());
         Users pencatat = usersRepo.findByIdUser(dto.getPencatat().getId());
+        // validasi kode buku tidak ditemukan
         if (kodeBuku == null) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Buku tidak tersedia atau sudah dipinjam ...");
             response.setData(dto);
             return response;
         }
-        if (peminjam == null) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("Data peminjam tidak ditemukan ...");
-            response.setData(dto);
-            return response;
-        }
+        // validasi pencatat tidak
         if (pencatat == null) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Data admin pencatat tidak ditemukan");
+            response.setData(dto);
+            return response;
+        }
+        // validasi saldo tidak mencukupi
+        if(peminjamDetail.getSaldo() < dto.getHarga()){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Saldo tidak mencukupi ...");
             response.setData(dto);
             return response;
         }
