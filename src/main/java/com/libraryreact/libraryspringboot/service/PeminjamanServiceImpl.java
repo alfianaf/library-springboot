@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -59,24 +58,32 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         SaldoLog saldoLog = new SaldoLog();
         UserDetail detailUser = userDetailRepo.findDetailByUserId(idUser);
         StatusTransaksi statusTransaksi = statusTransaksiRepo.findByName(EStatusTransaksi.DENDA);
+        System.out.println(statusTransaksi);
+
+        StatusTransaksi statusTransaksi2 = statusTransaksiRepo.findByName(EStatusTransaksi.SEWA);
         Peminjaman peminjaman = peminjamanRepo.findById(peminjamanDto.getId()).get();
         peminjaman.setTanggalPengembalian(Timestamp.from(Instant.now()));
         peminjaman.setPencatat(user);
         Date tanggalPinjam = new Date(peminjaman.getTanggalPinjam().getTime());
-        Date batasPinjam = peminjamanDto.getBatasPinjam();
-        Long day = ChronoUnit.DAYS.between(tanggalPinjam.toInstant(), batasPinjam.toInstant());
-        if (day > 0 && day < 7) {
+        Date batasPinjam = peminjaman.getBatasPinjam();
+        long difference = batasPinjam.getTime() - tanggalPinjam.getTime();
+        long daysDiff = (difference / (1000 * 60 * 60 * 24)) % 365;
+        if (daysDiff >= 0) {
             peminjaman.setDenda(0.0);
             response.setStatus(HttpStatus.OK.value());
+            saldoLog.setStatusTransaksi(statusTransaksi2);
+            saldoLog.setUser(user);
+            saldoLog.setTanggal(Timestamp.from(Instant.now()));
             response.setMessage("Silahkan letakkan buku pada rak terkait");
         }
-        if (day > 7 && day < 14) {
+        if (daysDiff < 0) {
             peminjaman.setDenda(100.0);
             saldoLog.setKredit(peminjaman.getDenda());
             saldoLog.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
             detailUser.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
+            saldoLog.setUser(user);
+            saldoLog.setTanggal(Timestamp.from(Instant.now()));
             saldoLog.setStatusTransaksi(statusTransaksi);
-
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Biaya sejumlah Rp. " + peminjaman.getDenda()
                     + " dibebankan untuk denda, saldo akhir anda : Rp. " + detailUser.getSaldo());
@@ -86,7 +93,8 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         peminjaman.setFinished(true);
 
         peminjamanRepo.save(peminjaman);
-
+        saldoRepo.save(saldoLog);
+        userDetailRepo.save(detailUser);
         response.setData(peminjaman);
 
         return ResponseEntity.ok(response);
