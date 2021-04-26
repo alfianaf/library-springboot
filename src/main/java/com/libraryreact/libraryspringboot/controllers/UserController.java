@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.libraryreact.libraryspringboot.config.JwtUtils;
 import com.libraryreact.libraryspringboot.models.dto.JWTResponse;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UsersRepository usersRepository;
