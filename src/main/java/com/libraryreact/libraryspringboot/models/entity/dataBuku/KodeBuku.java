@@ -1,6 +1,6 @@
 package com.libraryreact.libraryspringboot.models.entity.dataBuku;
 
-import java.io.Serializable;
+// import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Basic;
@@ -24,12 +24,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "kode_buku")
-public class KodeBuku implements Serializable {
+public class KodeBuku {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
+    @Column
     private String kodeBuku;
 
     @Basic

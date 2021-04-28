@@ -17,4 +17,7 @@ public interface BukuRepository extends JpaRepository<Buku, Integer> {
     @Query(value = "select * from buku where is_deleted = 0 and id = ?", nativeQuery = true)
     public Buku findByIdBuku(Integer id);
       
+    // get terbaru
+    @Query(value = "select * from buku where is_deleted = 0 order by id desc limit 6", nativeQuery = true)
+    public List<Buku> findTerbaru ();
 }
