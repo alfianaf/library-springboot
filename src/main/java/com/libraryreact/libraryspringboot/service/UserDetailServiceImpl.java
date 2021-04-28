@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,8 @@ public class UserDetailServiceImpl implements UsersService, UserDetailsService {
     UsersRepository usersRepository;
     @Autowired
     UserDetailRepository userDetailRepository;
+    @Autowired
+    private PasswordEncoder passEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -113,6 +116,15 @@ public class UserDetailServiceImpl implements UsersService, UserDetailsService {
                 + " berhasil ditambahkan, saldo akhir anda : Rp. " + detailUser.getSaldo());
         response.setData(detailUser);
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public Users reset(Integer id, UsersDto usersDto) {
+        Users user = usersRepository.findById(id).get();
+        user.setPassword(passEncoder.encode(usersDto.getPassword()));
+        usersRepository.save(user);
+        // TODO Auto-generated method stub
+        return user;
     }
 
 }

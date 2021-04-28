@@ -16,4 +16,6 @@ public interface UsersService {
     public Users register(Users user, UsersDto userDto);
 
     public Users login(String username, String password);
+
+    public Users reset(Integer id, UsersDto usersDto);
 }

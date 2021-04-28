@@ -3,6 +3,7 @@ package com.libraryreact.libraryspringboot.controllers.admin;
 import com.libraryreact.libraryspringboot.models.dto.PeminjamanDto;
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
 import com.libraryreact.libraryspringboot.service.PeminjamanService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RestController
 @RequestMapping("/admin/peminjaman")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PeminjamanController {
     @Autowired
     private PeminjamanService peminjamanService;

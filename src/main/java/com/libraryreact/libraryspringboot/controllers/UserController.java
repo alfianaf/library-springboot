@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.libraryreact.libraryspringboot.config.JwtUtils;
 import com.libraryreact.libraryspringboot.models.dto.JWTResponse;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -161,6 +163,22 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
 
+    }
+
+    @PutMapping("/reset/{id}")
+    public ResponseEntity<?> edit(@PathVariable Integer id, @RequestBody UsersDto usersDto) {
+        StatusMessageDto<Users> result = new StatusMessageDto<>();
+
+        try {
+            Users user = usersService.reset(id, usersDto);
+            result.setData(user);
+            result.setStatus(HttpStatus.OK.value());
+            result.setMessage("Password berhasil direset!");
+            return ResponseEntity.badRequest().body(result);
+        } catch (Exception e) {
+            result.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
 }

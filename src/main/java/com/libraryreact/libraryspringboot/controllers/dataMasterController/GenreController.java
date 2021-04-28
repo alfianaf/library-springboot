@@ -26,10 +26,10 @@ public class GenreController {
 
     // Insert new genre
     @PostMapping("/add")
-    public ResponseEntity<?> addGenre(@RequestBody GenreDto dto){
+    public ResponseEntity<?> addGenre(@RequestBody GenreDto dto) {
         try {
             StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            if(dto.getNamaGenre().isEmpty() == true){
+            if (dto.getNamaGenre().isEmpty() == true) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre kosong!");
                 response.setData(dto);
@@ -41,7 +41,7 @@ public class GenreController {
             response.setMessage("Genre berhasil ditambahkan!");
             response.setData(genreDto);
             return ResponseEntity.badRequest().body(response);
-   
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
@@ -49,17 +49,16 @@ public class GenreController {
 
     // Get all genre without is deleted status
     @GetMapping("/all")
-    public ResponseEntity<?> getAllGenre(){
+    public ResponseEntity<?> getAllGenre() {
         try {
             StatusMessageDto<List<GenreDto>> response = new StatusMessageDto<>();
             List<GenreDto> genreDtos = genreService.getAll();
-            if(genreDtos.size() == 0){
+            if (genreDtos.size() == 0) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Daftar genre kosong!");
                 response.setData(genreDtos);
                 return ResponseEntity.badRequest().body(response);
-            }
-            else{
+            } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Daftar genre ditemukan!");
                 response.setData(genreDtos);
@@ -72,17 +71,16 @@ public class GenreController {
 
     // Get by id genre without is deleted status
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> getByIdGenre(@PathVariable Integer id){
+    public ResponseEntity<?> getByIdGenre(@PathVariable Integer id) {
         try {
             StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
             GenreDto genreDto = genreService.getById(id);
-            if(genreDto == null){
+            if (genreDto == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre tidak ditemukan!");
                 response.setData(genreDto);
                 return ResponseEntity.badRequest().body(response);
-            }
-            else{
+            } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Genre ditemukan!");
                 response.setData(genreDto);
@@ -95,17 +93,16 @@ public class GenreController {
 
     // Get by id genre without is deleted status
     @GetMapping("/name/{namaGenre}")
-    public ResponseEntity<?> getByNamaGenre(@PathVariable String namaGenre){
+    public ResponseEntity<?> getByNamaGenre(@PathVariable String namaGenre) {
         try {
             StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
             GenreDto genreDto = genreService.getByNama(namaGenre);
-            if(genreDto == null){
+            if (genreDto == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre tidak ditemukan!");
                 response.setData(genreDto);
                 return ResponseEntity.badRequest().body(response);
-            }
-            else{
+            } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Genre ditemukan!");
                 response.setData(genreDto);
@@ -118,24 +115,23 @@ public class GenreController {
 
     // Update genre by id and show result without is deleted status
     @PutMapping("/edit")
-    public ResponseEntity<?> editGenre(@RequestBody GenreDto dto){
+    public ResponseEntity<?> editGenre(@RequestBody GenreDto dto) {
         try {
             StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
-            if(dto.getNamaGenre().isEmpty() == true){
+            if (dto.getNamaGenre().isEmpty() == true) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre kosong!");
                 response.setData(dto);
                 return ResponseEntity.badRequest().body(response);
             }
-            
+
             GenreDto genreDto = genreService.update(dto);
-            if(genreDto == null){
+            if (genreDto == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre gagal diubah!");
                 response.setData(genreDto);
                 return ResponseEntity.badRequest().body(response);
-            }
-            else{
+            } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Genre berhasil diubah!");
                 response.setData(genreDto);
@@ -148,17 +144,16 @@ public class GenreController {
 
     // Remove genre by id
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> removeGenre(@PathVariable Integer id){
+    public ResponseEntity<?> removeGenre(@PathVariable Integer id) {
         try {
             StatusMessageDto<GenreDto> response = new StatusMessageDto<>();
             GenreDto genreDto = genreService.delete(id);
-            if(genreDto == null){
+            if (genreDto == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Genre gagal dihapus!");
                 response.setData(genreDto);
                 return ResponseEntity.badRequest().body(response);
-            }
-            else{
+            } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Genre berhasil dihapus!");
                 response.setData(genreDto);

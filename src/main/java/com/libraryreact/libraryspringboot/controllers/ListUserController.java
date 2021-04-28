@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.libraryreact.libraryspringboot.models.dto.SaldoDto;
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ListUserController {
     @Autowired
     private UsersRepository usersRepository;
