@@ -9,6 +9,7 @@ import com.libraryreact.libraryspringboot.service.dataMasterService.GenreService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/genre")
+@CrossOrigin(origins = "http://localhost:3000")
 public class GenreController {
     @Autowired
     private GenreService genreService;
@@ -40,8 +42,13 @@ public class GenreController {
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Genre berhasil ditambahkan!");
             response.setData(genreDto);
+<<<<<<< HEAD
             return ResponseEntity.badRequest().body(response);
 
+=======
+            return ResponseEntity.ok().body(response);
+   
+>>>>>>> 55559a4f085c084e7237fb12974d5e23fa68f93a
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

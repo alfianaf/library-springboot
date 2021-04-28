@@ -9,6 +9,7 @@ import com.libraryreact.libraryspringboot.service.dataMasterService.KategoriServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/kategori")
+@CrossOrigin(origins = "http://localhost:3000")
 public class KategoriController {
     @Autowired
     private KategoriService katService;
@@ -46,7 +48,7 @@ public class KategoriController {
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Kategori berhasil ditambahkan!");
             response.setData(KategoriDto);
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.ok().body(response);
    
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
@@ -163,17 +165,17 @@ public class KategoriController {
                 return ResponseEntity.badRequest().body(response);
             }
             
-            KategoriDto KategoriDto = katService.update(dto);
-            if(KategoriDto == null){
+            KategoriDto kategoriDto = katService.update(dto);
+            if(kategoriDto == null){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Kategori gagal diubah!");
-                response.setData(KategoriDto);
+                response.setData(kategoriDto);
                 return ResponseEntity.badRequest().body(response);
             }
             else{
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Kategori berhasil diubah!");
-                response.setData(KategoriDto);
+                response.setData(kategoriDto);
                 return ResponseEntity.ok().body(response);
             }
         } catch (Exception e) {
