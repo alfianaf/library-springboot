@@ -42,13 +42,8 @@ public class GenreController {
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Genre berhasil ditambahkan!");
             response.setData(genreDto);
-<<<<<<< HEAD
-            return ResponseEntity.badRequest().body(response);
-
-=======
             return ResponseEntity.ok().body(response);
    
->>>>>>> 55559a4f085c084e7237fb12974d5e23fa68f93a
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
