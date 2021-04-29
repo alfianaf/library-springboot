@@ -1,4 +1,4 @@
-package com.libraryreact.libraryspringboot.controllers.dataBukuController;
+package com.libraryreact.libraryspringboot.controllers.peminjam;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/user/buku")
 @CrossOrigin(origins = "http://localhost:3000")
-public class BukuUsersController {
+public class PeminjamController {
     @Autowired
     private BukuUsersService bukuService;
 
