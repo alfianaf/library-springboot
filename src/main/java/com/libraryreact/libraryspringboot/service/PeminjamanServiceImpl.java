@@ -183,7 +183,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         peminjamanDto.setHarga(sewa.getHarga());
         peminjamanDto.setDenda(sewa.getDenda());
 
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setMessage("Buku berhasil disewa ...");
         response.setData(peminjamanDto);
 
@@ -216,6 +216,26 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         Peminjaman peminjaman = peminjamanRepo.findDetailById(id);
 
         return ResponseEntity.ok().body(peminjaman);
+    }
+
+    // menampilkan riwayat sewa berdasarkan id peminjammnya
+    @Override
+    public StatusMessageDto<List<Peminjaman>> riwayatSewaByPeminjam(Integer id) {
+        StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
+    
+        List<Peminjaman> peminjaman = peminjamanRepo.getriwayatsewa(id);
+        System.out.println(peminjaman);
+        if (peminjaman.size() == 0) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Peminjaman Tidak ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        } else {
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Peminjaman ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        }
     }
 
 }
