@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,6 +78,30 @@ public class BukuUsersController {
         try {
             StatusMessageDto<List<BukuUsersDto>> response = new StatusMessageDto<>();
             List<BukuUsersDto> BukuDtos = bukuService.getHotCollections();
+            
+            if(BukuDtos.size() == 0){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Daftar buku kosong!");
+                response.setData(BukuDtos);
+                return ResponseEntity.badRequest().body(response);
+            }
+            else{
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Daftar buku ditemukan!");
+                response.setData(BukuDtos);
+                return ResponseEntity.ok().body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    // get donasi by id user
+    @GetMapping("/donasi/{id}")
+    public ResponseEntity<?> getDonationByIdUser(@PathVariable Integer id){
+        try {
+            StatusMessageDto<List<BukuUsersDto>> response = new StatusMessageDto<>();
+            List<BukuUsersDto> BukuDtos = bukuService.getDonationByIdUser(id);
             
             if(BukuDtos.size() == 0){
                 response.setStatus(HttpStatus.BAD_REQUEST.value());

@@ -1,5 +1,7 @@
 package com.libraryreact.libraryspringboot.models.dto.dataBukuDto;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class KodeBukuUsersDto {
     private String kodeBuku;
     private Boolean isAvailable;
-    private String donatur;
+    private Integer donatur;
+    private Date createdAt;
 }

@@ -1,5 +1,6 @@
 package com.libraryreact.libraryspringboot.service.dataBukuService;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,14 +41,16 @@ public class BukuUsersServisImpl implements BukuUsersService{
             for (KodeBuku kodeBuku : kodeBukus) {
                 KodeBukuUsersDto tempKode = new KodeBukuUsersDto();
 
-                String username = null;
+                Integer idDonatur = null;
                 if(kodeBuku.getDonatur() != null){
-                    username = kodeBuku.getDonatur().getUsername();
+                    idDonatur = kodeBuku.getDonatur().getId();
                 }
 
                 tempKode.setKodeBuku(kodeBuku.getKodeBuku());
                 tempKode.setIsAvailable(kodeBuku.getIsAvailable());
-                tempKode.setDonatur(username);
+                tempKode.setDonatur(idDonatur);
+                Date date = new Date(kodeBuku.getCreatedAt().getTime());
+                tempKode.setCreatedAt(date);
 
                 listKode.add(tempKode);
             }
@@ -85,14 +88,16 @@ public class BukuUsersServisImpl implements BukuUsersService{
             for (KodeBuku kodeBuku : kodeBukus) {
                 KodeBukuUsersDto tempKode = new KodeBukuUsersDto();
 
-                String username = null;
+                Integer idDonatur = null;
                 if(kodeBuku.getDonatur() != null){
-                    username = kodeBuku.getDonatur().getUsername();
+                    idDonatur = kodeBuku.getDonatur().getId();
                 }
 
                 tempKode.setKodeBuku(kodeBuku.getKodeBuku());
                 tempKode.setIsAvailable(kodeBuku.getIsAvailable());
-                tempKode.setDonatur(username);
+                tempKode.setDonatur(idDonatur);
+                Date date = new Date(kodeBuku.getCreatedAt().getTime());
+                tempKode.setCreatedAt(date);
 
                 listKode.add(tempKode);
             }
@@ -132,14 +137,16 @@ public class BukuUsersServisImpl implements BukuUsersService{
             for (KodeBuku kodeBuku : kodeBukus) {
                 KodeBukuUsersDto tempKode = new KodeBukuUsersDto();
 
-                String username = null;
+                Integer idDonatur = null;
                 if(kodeBuku.getDonatur() != null){
-                    username = kodeBuku.getDonatur().getUsername();
+                    idDonatur = kodeBuku.getDonatur().getId();
                 }
 
                 tempKode.setKodeBuku(kodeBuku.getKodeBuku());
                 tempKode.setIsAvailable(kodeBuku.getIsAvailable());
-                tempKode.setDonatur(username);
+                tempKode.setDonatur(idDonatur);
+                Date date = new Date(kodeBuku.getCreatedAt().getTime());
+                tempKode.setCreatedAt(date);
 
                 listKode.add(tempKode);
             }
@@ -160,6 +167,45 @@ public class BukuUsersServisImpl implements BukuUsersService{
 
             bukuUsersDtos.add(tempBuku);
 
+        }
+
+        return bukuUsersDtos;
+    }
+
+    @Override
+    public List<BukuUsersDto> getDonationByIdUser(Integer id) {
+        List<KodeBuku> donations = kodeRepo.findBukuByIdDonatur(id);
+        List<BukuUsersDto> bukuUsersDtos = new ArrayList<>();
+
+        for (KodeBuku donation: donations) {
+            List<KodeBukuUsersDto> listKode = new ArrayList<>();
+            Buku buku = donation.getBuku();
+            BukuUsersDto tempBuku = new BukuUsersDto();
+            KodeBukuUsersDto tempKode = new KodeBukuUsersDto();
+            Integer idDonatur = donation.getDonatur().getId();
+
+            tempKode.setKodeBuku(donation.getKodeBuku());
+            tempKode.setIsAvailable(donation.getIsAvailable());
+            tempKode.setDonatur(idDonatur);
+            Date date = new Date(donation.getCreatedAt().getTime());
+            tempKode.setCreatedAt(date);
+            listKode.add(tempKode);
+
+            tempBuku.setId(buku.getId());
+            tempBuku.setJudul(buku.getJudul());
+            tempBuku.setPengarang(buku.getPengarang());
+            tempBuku.setTahun(buku.getTahunTerbit());
+            tempBuku.setIsbn(buku.getIsbn());
+            tempBuku.setHarga(buku.getHarga());
+            tempBuku.setDeskripsi(buku.getDeskripsi());
+            tempBuku.setSampul(buku.getSampul());
+            tempBuku.setPenerbit(buku.getPenerbit().getNamaPenerbit());
+            tempBuku.setKategori(buku.getKategori().getNamaKategori());
+            tempBuku.setGenre(buku.getGenre().getNamaGenre());
+            tempBuku.setLokasi(buku.getLokasi().getKodeLokasi());
+            tempBuku.setKodeBuku(listKode);
+
+            bukuUsersDtos.add(tempBuku);
         }
 
         return bukuUsersDtos;
