@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.libraryreact.libraryspringboot.models.entity.Peminjaman;
-import com.libraryreact.libraryspringboot.models.entity.Users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
