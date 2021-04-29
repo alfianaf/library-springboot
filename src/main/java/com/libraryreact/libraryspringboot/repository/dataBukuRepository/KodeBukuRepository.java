@@ -1,6 +1,7 @@
 package com.libraryreact.libraryspringboot.repository.dataBukuRepository;
 
 import java.util.List;
+import java.util.Set;
 
 import com.libraryreact.libraryspringboot.models.entity.dataBuku.Buku;
 import com.libraryreact.libraryspringboot.models.entity.dataBuku.KodeBuku;
@@ -25,9 +26,14 @@ public interface KodeBukuRepository extends JpaRepository<KodeBuku, Integer>{
     // get all buku berdasarkan status bukunya
     // @Query(value = "select * from kode_buku where is_deleted = 0 and buku = ?", nativeQuery = true)
     public List<KodeBuku> findByBuku(Buku buku);
-
+    
     // get by kode buku yang tersedia dan belum di hapus
     @Query(value = "select * from kode_buku where is_deleted = 0 and is_available = 1 and kode_buku = ?", nativeQuery = true)
     public KodeBuku findByKodeBukuAvailable(String kodeBuku);
+    
+    // get kode buku by id user
+    @Query(value = "SELECT * FROM kode_buku WHERE id_donatur=? order by created_at desc ", nativeQuery = true)
+    public List<KodeBuku> findBukuByIdDonatur(Integer id);
+
 
 }
