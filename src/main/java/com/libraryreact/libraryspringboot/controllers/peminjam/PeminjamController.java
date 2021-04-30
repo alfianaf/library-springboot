@@ -124,11 +124,33 @@ public class PeminjamController {
         }
     }
 
-    // get riwayat sewa by id user peminjam
+    // get semua riwayat sewa (selesai dan sedang disewa) by id user peminjam
     @GetMapping("/riwayat/sewa/{id}")
     public ResponseEntity<?> getRiwayatSewa(@PathVariable Integer id){
         try {
             StatusMessageDto<List<Peminjaman>> response = peminjamanService.riwayatSewaByPeminjam(id);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    // get buku yang sedang disewa berdasarkan id user peminjam
+    @GetMapping("/riwayat/sedangdisewa/{id}")
+    public ResponseEntity<?> getSedangDisewa(@PathVariable Integer id){
+        try {
+            StatusMessageDto<List<Peminjaman>> response = peminjamanService.sedangDisewaByPeminjam(id);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    // get riwayat sewa berstatus selesai by id user peminjam
+    @GetMapping("/riwayat/selesai/{id}")
+    public ResponseEntity<?> getRiwayatSewaSelesai(@PathVariable Integer id){
+        try {
+            StatusMessageDto<List<Peminjaman>> response = peminjamanService.riwayatSewaSelesaiByPeminjam(id);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
