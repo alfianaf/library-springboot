@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 public interface PeminjamanService {
     public StatusMessageDto<PeminjamanDto> sewaBuku(PeminjamanDto dto);
     public StatusMessageDto<List<Peminjaman>> riwayatSewaByPeminjam(Integer id);
+    public StatusMessageDto<List<Peminjaman>> sedangDisewaByPeminjam(Integer id);
+    public StatusMessageDto<List<Peminjaman>> riwayatSewaSelesaiByPeminjam(Integer id);
 
 
     public ResponseEntity<?> pengembalianBuku(PeminjamanDto peminjamanDto);

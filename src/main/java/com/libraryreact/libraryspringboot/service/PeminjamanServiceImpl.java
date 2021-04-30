@@ -218,12 +218,52 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         return ResponseEntity.ok().body(peminjaman);
     }
 
-    // menampilkan riwayat sewa berdasarkan id peminjammnya
+    // menampilkan semua (selesai dan belum dikembalikan) riwayat sewa berdasarkan id peminjammnya
     @Override
     public StatusMessageDto<List<Peminjaman>> riwayatSewaByPeminjam(Integer id) {
         StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
     
         List<Peminjaman> peminjaman = peminjamanRepo.getriwayatsewa(id);
+        System.out.println(peminjaman);
+        if (peminjaman.size() == 0) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Peminjaman Tidak ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        } else {
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Peminjaman ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        }
+    }
+
+    //mengambil buku yang sedang disewa saja
+    @Override
+    public StatusMessageDto<List<Peminjaman>> sedangDisewaByPeminjam(Integer id) {
+        StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
+    
+        List<Peminjaman> peminjaman = peminjamanRepo.getSedangDisewa(id);
+        System.out.println(peminjaman);
+        if (peminjaman.size() == 0) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Peminjaman Tidak ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        } else {
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Peminjaman ditemukan!");
+            response.setData(peminjaman);
+            return response;
+        }
+    }
+
+    // mengambil riwayat buku yang berstatus sudah selesai
+    @Override
+    public StatusMessageDto<List<Peminjaman>> riwayatSewaSelesaiByPeminjam(Integer id) {
+        StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
+    
+        List<Peminjaman> peminjaman = peminjamanRepo.getRiwayatSewaSelesai(id);
         System.out.println(peminjaman);
         if (peminjaman.size() == 0) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());

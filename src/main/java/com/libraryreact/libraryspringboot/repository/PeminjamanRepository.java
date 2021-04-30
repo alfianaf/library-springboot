@@ -20,6 +20,12 @@ public interface PeminjamanRepository extends JpaRepository<Peminjaman, Integer>
     @Query(value = "select * from peminjaman where user_id = ? order by is_finished asc", nativeQuery = true)
     public List<Peminjaman> getriwayatsewa(Integer id);
 
+    @Query(value = "select * from peminjaman where user_id = ? and is_finished = 1 order by is_finished asc", nativeQuery = true)
+    public List<Peminjaman> getRiwayatSewaSelesai(Integer id);
+
+    @Query(value = "select * from peminjaman where user_id = ? and is_finished = 0 order by is_finished asc", nativeQuery = true)
+    public List<Peminjaman> getSedangDisewa(Integer id);
+
     @Query(value = "select kode_buku.id_buku from peminjaman join kode_buku on peminjaman.kode_buku = kode_buku.kode_buku group by id_buku order by count(kode_buku.id_buku) desc limit 6", nativeQuery = true)
     public Set<Integer> findIdBukuTerpopuler();
 }
