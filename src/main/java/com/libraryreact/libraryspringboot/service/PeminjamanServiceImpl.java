@@ -106,7 +106,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         PeminjamanDto peminjamanDto = new PeminjamanDto();
 
         KodeBuku kodeBuku = kodeBukuRepo.findByKodeBukuAvailable(dto.getKodeBuku().getKodeBuku());
-        Users peminjam = usersRepo.findByIdUser(dto.getPeminjam().getId());
+        Users peminjam = usersRepo.findByUsernameUser(dto.getPeminjam().getUsername());
         UserDetail peminjamDetail = userDetailRepo.findDetailByUserId(peminjam.getId());
         Users pencatat = usersRepo.findByIdUser(dto.getPencatat().getId());
         // validasi kode buku tidak ditemukan
@@ -124,7 +124,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
             return response;
         }
         // validasi saldo tidak mencukupi
-        if(peminjamDetail.getSaldo() < dto.getHarga()){
+        if (peminjamDetail.getSaldo() < dto.getHarga()) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Saldo tidak mencukupi ...");
             response.setData(dto);
@@ -218,11 +218,12 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         return ResponseEntity.ok().body(peminjaman);
     }
 
-    // menampilkan semua (selesai dan belum dikembalikan) riwayat sewa berdasarkan id peminjammnya
+    // menampilkan semua (selesai dan belum dikembalikan) riwayat sewa berdasarkan
+    // id peminjammnya
     @Override
     public StatusMessageDto<List<Peminjaman>> riwayatSewaByPeminjam(Integer id) {
         StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
-    
+
         List<Peminjaman> peminjaman = peminjamanRepo.getriwayatsewa(id);
         System.out.println(peminjaman);
         if (peminjaman.size() == 0) {
@@ -238,11 +239,11 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         }
     }
 
-    //mengambil buku yang sedang disewa saja
+    // mengambil buku yang sedang disewa saja
     @Override
     public StatusMessageDto<List<Peminjaman>> sedangDisewaByPeminjam(Integer id) {
         StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
-    
+
         List<Peminjaman> peminjaman = peminjamanRepo.getSedangDisewa(id);
         System.out.println(peminjaman);
         if (peminjaman.size() == 0) {
@@ -262,7 +263,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
     @Override
     public StatusMessageDto<List<Peminjaman>> riwayatSewaSelesaiByPeminjam(Integer id) {
         StatusMessageDto<List<Peminjaman>> response = new StatusMessageDto<>();
-    
+
         List<Peminjaman> peminjaman = peminjamanRepo.getRiwayatSewaSelesai(id);
         System.out.println(peminjaman);
         if (peminjaman.size() == 0) {

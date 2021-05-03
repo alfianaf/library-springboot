@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface KodeBukuRepository extends JpaRepository<KodeBuku, Integer>{
+public interface KodeBukuRepository extends JpaRepository<KodeBuku, Integer> {
     // get all buku berdasarkan status is deleted
-    public List<KodeBuku> findByIsDeleted (Boolean isDeleted);
+    public List<KodeBuku> findByIsDeleted(Boolean isDeleted);
 
     // get by id
     @Query(value = "select * from kode_buku where is_deleted = 0 and id = ?", nativeQuery = true)
@@ -23,16 +23,20 @@ public interface KodeBukuRepository extends JpaRepository<KodeBuku, Integer>{
     public KodeBuku findByKodeBuku(String kodeBuku);
 
     // get all buku berdasarkan status bukunya
-    // @Query(value = "select * from kode_buku where is_deleted = 0 and buku = ?", nativeQuery = true)
+    // @Query(value = "select * from kode_buku where is_deleted = 0 and buku = ?",
+    // nativeQuery = true)
     public List<KodeBuku> findByBuku(Buku buku);
-    
+
     // get by kode buku yang tersedia dan belum di hapus
     @Query(value = "select * from kode_buku where is_deleted = 0 and is_available = 1 and kode_buku = ?", nativeQuery = true)
     public KodeBuku findByKodeBukuAvailable(String kodeBuku);
-    
+
+    // get by kode buku yang tersedia dan belum di hapus
+    @Query(value = "select * from kode_buku where is_deleted = 0 and is_available = 1", nativeQuery = true)
+    public List<KodeBuku> findByKodeBukuAvailableAll();
+
     // get kode buku by id user
     @Query(value = "SELECT * FROM kode_buku WHERE id_donatur=? order by created_at desc ", nativeQuery = true)
     public List<KodeBuku> findBukuByIdDonatur(Integer id);
-
 
 }

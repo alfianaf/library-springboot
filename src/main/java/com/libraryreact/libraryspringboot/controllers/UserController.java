@@ -74,34 +74,34 @@ public class UserController {
 
             roleStr.forEach(role -> {
                 switch (role) {
-                case "admin":
-                    try {
-                        Role adminRole = roleRepository.findByName(ERole.ADMIN);
-                        roles.add(adminRole);
-                    } catch (RuntimeException e) {
-                        throw new RuntimeException("Role not found!");
-                    }
-                    break;
+                    case "admin":
+                        try {
+                            Role adminRole = roleRepository.findByName(ERole.ADMIN);
+                            roles.add(adminRole);
+                        } catch (RuntimeException e) {
+                            throw new RuntimeException("Role not found!");
+                        }
+                        break;
 
-                case "peminjam":
-                    try {
-                        Role userRole = roleRepository.findByName(ERole.PEMINJAM);
-                        roles.add(userRole);
-                    } catch (RuntimeException e) {
-                        // TODO: handle exception
-                        throw new RuntimeException("Role not found!");
-                    }
-                    break;
+                    case "peminjam":
+                        try {
+                            Role userRole = roleRepository.findByName(ERole.PEMINJAM);
+                            roles.add(userRole);
+                        } catch (RuntimeException e) {
+                            // TODO: handle exception
+                            throw new RuntimeException("Role not found!");
+                        }
+                        break;
 
-                default:
-                    try {
-                        Role guestRole = roleRepository.findByName(ERole.PEMINJAM);
-                        roles.add(guestRole);
-                    } catch (RuntimeException e) {
-                        // TODO: handle exception
-                        throw new RuntimeException("Role not found!");
-                    }
-                    break;
+                    default:
+                        try {
+                            Role guestRole = roleRepository.findByName(ERole.PEMINJAM);
+                            roles.add(guestRole);
+                        } catch (RuntimeException e) {
+                            // TODO: handle exception
+                            throw new RuntimeException("Role not found!");
+                        }
+                        break;
                 }
             });
 
@@ -160,6 +160,39 @@ public class UserController {
             // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Username atau Password Salah");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+
+    @PutMapping("/change")
+    public ResponseEntity<?> change(@RequestBody LoginDto dto) {
+        StatusMessageDto response = new StatusMessageDto<>();
+        Users user = usersRepository.findByUsername(dto.getUsername());
+
+        try {
+            if (user.getIsActive().equals(true)) {
+                // autentikasi user
+                Authentication authentication = authManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // Users user = usersRepository.findById(id).get();
+                user.setPassword(passEncoder.encode(dto.getPasswordNew()));
+                usersRepository.save(user);
+
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Password berhasil diubah");
+                response.setData(user);
+
+                return ResponseEntity.ok().body(response);
+            }
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("User tidak ditemukan");
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Password lama salah");
             return ResponseEntity.badRequest().body(response);
         }
 

@@ -23,4 +23,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     @Query(value = "select * from users where is_active = 1 and id = ?", nativeQuery = true)
     public Users findByIdUser(Integer id);
+
+    @Query(value = "select * from users where is_active = 1 and username = ?", nativeQuery = true)
+    public Users findByUsernameUser(String username);
 }

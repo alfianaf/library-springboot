@@ -50,6 +50,28 @@ public class KodeBukuController {
         }
     }
 
+    // Get all buku available without is deleted status
+    @GetMapping("/all-available")
+    public ResponseEntity<?> getAllAvailable() {
+        try {
+            StatusMessageDto<List<KodeBukuDto>> response = new StatusMessageDto<>();
+            List<KodeBukuDto> BukuDtos = kodeService.getAllAvailable();
+            if (BukuDtos.size() == 0) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Daftar kode buku kosong!");
+                response.setData(BukuDtos);
+                return ResponseEntity.badRequest().body(response);
+            } else {
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Daftar kode buku ditemukan!");
+                response.setData(BukuDtos);
+                return ResponseEntity.ok().body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
     // Get all buku without is deleted status
     @GetMapping("/all")
     public ResponseEntity<?> getAllBuku() {

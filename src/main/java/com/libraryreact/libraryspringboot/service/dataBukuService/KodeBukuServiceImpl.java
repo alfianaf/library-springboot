@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class KodeBukuServiceImpl implements KodeBukuService{
+public class KodeBukuServiceImpl implements KodeBukuService {
     @Autowired
     private KodeBukuRepository kodeBukuRepo;
     @Autowired
@@ -32,12 +32,13 @@ public class KodeBukuServiceImpl implements KodeBukuService{
         KodeBuku kodeBuku = new KodeBuku();
         Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
         Users donatur = null;
-        if(dto.getDonatur().getId() != null){
+        if (dto.getDonatur().getId() != null) {
             donatur = userRepo.findByIdUser(dto.getDonatur().getId());
         }
-                       
-        String generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-" + kodeBuku.getId();
-        
+
+        String generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-"
+                + kodeBuku.getId();
+
         kodeBuku.setKodeBuku(generateCode);
         kodeBuku.setCreatedAt(Timestamp.from(Instant.now()));
         kodeBuku.setIsAvailable(true);
@@ -47,7 +48,8 @@ public class KodeBukuServiceImpl implements KodeBukuService{
 
         kodeBukuRepo.save(kodeBuku);
 
-        generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-" + kodeBuku.getId();
+        generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-"
+                + kodeBuku.getId();
         kodeBuku.setKodeBuku(generateCode);
         kodeBukuRepo.save(kodeBuku);
 
@@ -60,6 +62,25 @@ public class KodeBukuServiceImpl implements KodeBukuService{
         newKode.setBuku(kodeBuku.getBuku());
 
         return newKode;
+    }
+
+    @Override
+    public List<KodeBukuDto> getAllAvailable() {
+        List<KodeBuku> kodeBukus = kodeBukuRepo.findByKodeBukuAvailableAll();
+        List<KodeBukuDto> kodeBukuDtos = new ArrayList<>();
+
+        for (KodeBuku kodeBuku : kodeBukus) {
+            KodeBukuDto temp = new KodeBukuDto();
+            temp.setId(kodeBuku.getId());
+            temp.setKodeBuku(kodeBuku.getKodeBuku());
+            temp.setCreatedAt(kodeBuku.getCreatedAt());
+            temp.setIsAvailable(kodeBuku.getIsAvailable());
+            temp.setDonatur(kodeBuku.getDonatur());
+            temp.setBuku(kodeBuku.getBuku());
+
+            kodeBukuDtos.add(temp);
+        }
+        return kodeBukuDtos;
     }
 
     @Override
@@ -103,10 +124,9 @@ public class KodeBukuServiceImpl implements KodeBukuService{
     @Override
     public KodeBukuDto getById(Integer id) {
         KodeBuku kodeBuku = kodeBukuRepo.findByIdKodeBuku(id);
-        if(kodeBuku == null){
+        if (kodeBuku == null) {
             return null;
-        }
-        else{
+        } else {
             KodeBukuDto temp = new KodeBukuDto();
             temp.setId(kodeBuku.getId());
             temp.setKodeBuku(kodeBuku.getKodeBuku());
@@ -122,10 +142,9 @@ public class KodeBukuServiceImpl implements KodeBukuService{
     @Override
     public KodeBukuDto getByKode(String kodeBuku) {
         KodeBuku kodBuku = kodeBukuRepo.findByKodeBuku(kodeBuku);
-        if(kodBuku == null){
+        if (kodBuku == null) {
             return null;
-        }
-        else{
+        } else {
             KodeBukuDto temp = new KodeBukuDto();
             temp.setId(kodBuku.getId());
             temp.setKodeBuku(kodBuku.getKodeBuku());
@@ -141,28 +160,30 @@ public class KodeBukuServiceImpl implements KodeBukuService{
     @Override
     public KodeBukuDto update(KodeBukuDto dto) {
         KodeBuku kodeBuku = kodeBukuRepo.findByIdKodeBuku(dto.getId());
-        if(kodeBuku != null){
+        if (kodeBuku != null) {
             // Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
             Users donatur = null;
-            if(dto.getDonatur().getId() != null){
+            if (dto.getDonatur().getId() != null) {
                 donatur = userRepo.findByIdUser(dto.getDonatur().getId());
             }
-                               
-            // String generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-" + kodeBuku.getId();
-            
+
+            // String generateCode = buku.getKategori().getKodeKategori() + "-" +
+            // buku.getLokasi().getKodeLokasi() + "-" + kodeBuku.getId();
+
             // kodeBuku.setKodeBuku(generateCode);
             // kodeBuku.setCreatedAt(Timestamp.from(Instant.now()));
             // kodeBuku.setIsAvailable(true);
             // kodeBuku.setIsDeleted(false);
             kodeBuku.setDonatur(donatur);
             // kodeBuku.setBuku(buku);
-    
+
             kodeBukuRepo.save(kodeBuku);
-    
-            // generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-" + buku.getId();
+
+            // generateCode = buku.getKategori().getKodeKategori() + "-" +
+            // buku.getLokasi().getKodeLokasi() + "-" + buku.getId();
             // kodeBuku.setKodeBuku(generateCode);
             // kodeBukuRepo.save(kodeBuku);
-    
+
             KodeBukuDto newKode = new KodeBukuDto();
             newKode.setId(kodeBuku.getId());
             newKode.setKodeBuku(kodeBuku.getKodeBuku());
@@ -170,10 +191,9 @@ public class KodeBukuServiceImpl implements KodeBukuService{
             newKode.setIsAvailable(kodeBuku.getIsAvailable());
             newKode.setDonatur(kodeBuku.getDonatur());
             newKode.setBuku(kodeBuku.getBuku());
-    
+
             return newKode;
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -181,10 +201,9 @@ public class KodeBukuServiceImpl implements KodeBukuService{
     @Override
     public KodeBukuDto delete(Integer id) {
         KodeBuku kodeBuku = kodeBukuRepo.findByIdKodeBuku(id);
-        if(kodeBuku == null){
+        if (kodeBuku == null) {
             return null;
-        }
-        else{
+        } else {
             kodeBuku.setIsDeleted(true);
             kodeBuku.setIsAvailable(false);
             kodeBukuRepo.save(kodeBuku);
@@ -200,5 +219,5 @@ public class KodeBukuServiceImpl implements KodeBukuService{
             return temp;
         }
     }
-    
+
 }
