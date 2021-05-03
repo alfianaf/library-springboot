@@ -48,6 +48,7 @@ public class PeminjamanController {
     public ResponseEntity<?> pengembalian(@RequestBody PeminjamanDto dto) {
         try {
             return peminjamanService.pengembalianBuku(dto);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

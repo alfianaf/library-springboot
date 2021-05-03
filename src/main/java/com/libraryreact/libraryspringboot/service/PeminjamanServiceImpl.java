@@ -52,16 +52,17 @@ public class PeminjamanServiceImpl implements PeminjamanService {
     public ResponseEntity<?> pengembalianBuku(PeminjamanDto peminjamanDto) {
         StatusMessageDto<Peminjaman> response = new StatusMessageDto<>();
 
-        Integer idUser = jwtUtils.getIdFromToken(peminjamanDto.getToken());
+        Integer idUser = peminjamanDto.getIdUser();
         Users user = usersRepo.findById(idUser).get();
 
         SaldoLog saldoLog = new SaldoLog();
-        UserDetail detailUser = userDetailRepo.findDetailByUserId(idUser);
         StatusTransaksi statusTransaksi = statusTransaksiRepo.findByName(EStatusTransaksi.DENDA);
         System.out.println(statusTransaksi);
 
         StatusTransaksi statusTransaksi2 = statusTransaksiRepo.findByName(EStatusTransaksi.SEWA);
         Peminjaman peminjaman = peminjamanRepo.findById(peminjamanDto.getId()).get();
+        UserDetail detailUser = userDetailRepo.findDetailByUserId(peminjaman.getUser().getId());
+
         peminjaman.setTanggalPengembalian(Timestamp.from(Instant.now()));
         peminjaman.setPencatat(user);
         Date tanggalPinjam = new Date(peminjaman.getTanggalPinjam().getTime());
@@ -72,16 +73,22 @@ public class PeminjamanServiceImpl implements PeminjamanService {
             peminjaman.setDenda(0.0);
             response.setStatus(HttpStatus.OK.value());
             saldoLog.setStatusTransaksi(statusTransaksi2);
-            saldoLog.setUser(user);
+            saldoLog.setUser(peminjaman.getUser());
             saldoLog.setTanggal(Timestamp.from(Instant.now()));
             response.setMessage("Silahkan letakkan buku pada rak terkait");
         }
         if (daysDiff < 0) {
             peminjaman.setDenda(100.0);
+            if (detailUser.getSaldo() < peminjaman.getDenda()) {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Saldo tidak mencukupi ...");
+                response.setData(peminjaman);
+                return ResponseEntity.badRequest().body(response);
+            }
             saldoLog.setKredit(peminjaman.getDenda());
             saldoLog.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
             detailUser.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
-            saldoLog.setUser(user);
+            saldoLog.setUser(peminjaman.getUser());
             saldoLog.setTanggal(Timestamp.from(Instant.now()));
             saldoLog.setStatusTransaksi(statusTransaksi);
             response.setStatus(HttpStatus.OK.value());

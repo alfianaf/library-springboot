@@ -24,6 +24,6 @@ public class PeminjamanDto {
     private boolean isFinished;
     private Users peminjam;
     private Users pencatat;
-    private String token;
+    private Integer idUser;
 
 }
