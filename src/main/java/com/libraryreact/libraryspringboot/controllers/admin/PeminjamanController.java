@@ -58,6 +58,15 @@ public class PeminjamanController {
     public ResponseEntity<?> sewa(@RequestBody PeminjamanDto dto) {
         try {
             StatusMessageDto<PeminjamanDto> response = peminjamanService.sewaBuku(dto);
+            if (response.getStatus().equals(400)) {
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (response.getStatus().equals(410)) {
+                return ResponseEntity.status(410).body(response);
+            }
+            if (response.getStatus().equals(404)) {
+                return ResponseEntity.status(404).body(response);
+            }
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);

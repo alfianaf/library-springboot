@@ -111,14 +111,14 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         Users pencatat = usersRepo.findByIdUser(dto.getPencatat().getId());
         // validasi kode buku tidak ditemukan
         if (kodeBuku == null) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.GONE.value());
             response.setMessage("Buku tidak tersedia atau sudah dipinjam ...");
             response.setData(dto);
             return response;
         }
         // validasi pencatat tidak
         if (pencatat == null) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage("Data admin pencatat tidak ditemukan");
             response.setData(dto);
             return response;
