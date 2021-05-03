@@ -32,8 +32,8 @@ public class KodeBukuServiceImpl implements KodeBukuService {
         KodeBuku kodeBuku = new KodeBuku();
         Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
         Users donatur = null;
-        if (dto.getDonatur().getId() != null) {
-            donatur = userRepo.findByIdUser(dto.getDonatur().getId());
+        if (dto.getDonatur().getUsername() != null) {
+            donatur = userRepo.findByUsername(dto.getDonatur().getUsername());
         }
 
         String generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-"
@@ -163,8 +163,11 @@ public class KodeBukuServiceImpl implements KodeBukuService {
         if (kodeBuku != null) {
             // Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
             Users donatur = null;
-            if (dto.getDonatur().getId() != null) {
-                donatur = userRepo.findByIdUser(dto.getDonatur().getId());
+            if (dto.getDonatur().getUsername() != null) {
+                donatur = userRepo.findByUsername(dto.getDonatur().getUsername());
+                if(donatur == null){
+                    return null;
+                }
             }
 
             // String generateCode = buku.getKategori().getKodeKategori() + "-" +

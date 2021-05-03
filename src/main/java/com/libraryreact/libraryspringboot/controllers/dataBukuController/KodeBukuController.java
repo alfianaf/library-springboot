@@ -153,7 +153,7 @@ public class KodeBukuController {
             KodeBukuDto kodeBukuDto = kodeService.update(dto);
             if (kodeBukuDto == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                response.setMessage("Kode buku gagal diubah!");
+                response.setMessage("Kode buku gagal diubah! Cek kembali username donatur ...");
                 response.setData(kodeBukuDto);
                 return ResponseEntity.badRequest().body(response);
             } else {
