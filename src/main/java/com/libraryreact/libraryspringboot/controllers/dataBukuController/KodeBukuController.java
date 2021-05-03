@@ -40,10 +40,18 @@ public class KodeBukuController {
             // }
 
             KodeBukuDto kodeBukuDto = kodeService.create(dto);
-            response.setStatus(HttpStatus.CREATED.value());
-            response.setMessage("Kode buku berhasil ditambahkan!");
-            response.setData(kodeBukuDto);
-            return ResponseEntity.badRequest().body(response);
+            if(kodeBukuDto != null){
+                response.setStatus(HttpStatus.CREATED.value());
+                response.setMessage("Kode buku berhasil ditambahkan!");
+                response.setData(kodeBukuDto);
+                return ResponseEntity.ok().body(response);
+            }
+            else{
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Kode buku gagal ditambahkan! \nCek username donatur ...");
+                response.setData(kodeBukuDto);
+                return ResponseEntity.badRequest().body(response);
+            }
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);

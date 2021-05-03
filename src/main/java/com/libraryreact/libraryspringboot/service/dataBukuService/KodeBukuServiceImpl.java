@@ -31,9 +31,14 @@ public class KodeBukuServiceImpl implements KodeBukuService {
     public KodeBukuDto create(KodeBukuDto dto) {
         KodeBuku kodeBuku = new KodeBuku();
         Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
-        Users donatur = null;
-        if (dto.getDonatur().getUsername() != null) {
-            donatur = userRepo.findByUsername(dto.getDonatur().getUsername());
+        Users donatur = new Users();
+        if (!dto.getDonatur().getUsername().isEmpty()) {
+            Users tempDonatur = userRepo.findByUsername(dto.getDonatur().getUsername());
+            if(tempDonatur == null) return null;
+            else donatur = tempDonatur;
+        }
+        else{
+            donatur = null;
         }
 
         String generateCode = buku.getKategori().getKodeKategori() + "-" + buku.getLokasi().getKodeLokasi() + "-"
@@ -162,12 +167,14 @@ public class KodeBukuServiceImpl implements KodeBukuService {
         KodeBuku kodeBuku = kodeBukuRepo.findByIdKodeBuku(dto.getId());
         if (kodeBuku != null) {
             // Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
-            Users donatur = null;
-            if (dto.getDonatur().getUsername() != null) {
-                donatur = userRepo.findByUsername(dto.getDonatur().getUsername());
-                if(donatur == null){
-                    return null;
-                }
+            Users donatur = new Users();
+            if (dto.getDonatur().getUsername() != "") {
+                Users tempDonatur = userRepo.findByUsername(dto.getDonatur().getUsername());
+                if(tempDonatur == null) return null;
+                else donatur = tempDonatur;
+            }
+            else{
+                donatur = null;
             }
 
             // String generateCode = buku.getKategori().getKodeKategori() + "-" +
