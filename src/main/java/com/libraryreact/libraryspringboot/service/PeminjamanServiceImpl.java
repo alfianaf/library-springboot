@@ -57,24 +57,19 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         SaldoLog saldoLog = new SaldoLog();
         StatusTransaksi statusTransaksi = statusTransaksiRepo.findByName(EStatusTransaksi.DENDA);
         System.out.println(statusTransaksi);
-
-        StatusTransaksi statusTransaksi2 = statusTransaksiRepo.findByName(EStatusTransaksi.SEWA);
         Peminjaman peminjaman = peminjamanRepo.findById(peminjamanDto.getId()).get();
         UserDetail detailUser = userDetailRepo.findDetailByUserId(peminjaman.getUser().getId());
         KodeBuku kodeBuku = kodeBukuRepo.findByKodeBuku(peminjaman.getKodeBuku().getKodeBuku());
 
         peminjaman.setTanggalPengembalian(Timestamp.from(Instant.now()));
         peminjaman.setPencatat(user);
-        Date tanggalPinjam = new Date(peminjaman.getTanggalPinjam().getTime());
+        Date tanggalKembali = new Date(peminjaman.getTanggalPengembalian().getTime());
         Date batasPinjam = peminjaman.getBatasPinjam();
-        long difference = batasPinjam.getTime() - tanggalPinjam.getTime();
+        long difference = batasPinjam.getTime() - tanggalKembali.getTime();
         long daysDiff = (difference / (1000 * 60 * 60 * 24)) % 365;
         if (daysDiff >= 0) {
             peminjaman.setDenda(0.0);
             response.setStatus(HttpStatus.OK.value());
-            saldoLog.setStatusTransaksi(statusTransaksi2);
-            saldoLog.setUser(peminjaman.getUser());
-            saldoLog.setTanggal(Timestamp.from(Instant.now()));
             response.setMessage("Silahkan letakkan buku pada rak terkait");
         }
         if (daysDiff < 0) {
