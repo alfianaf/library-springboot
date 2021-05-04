@@ -32,7 +32,7 @@ public class KodeBukuServiceImpl implements KodeBukuService {
         KodeBuku kodeBuku = new KodeBuku();
         Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
         Users donatur = new Users();
-        if (!dto.getDonatur().getUsername().isEmpty()) {
+        if (dto.getDonatur().getUsername()!="" && dto.getDonatur().getUsername()!= null) {
             Users tempDonatur = userRepo.findByUsername(dto.getDonatur().getUsername());
             if(tempDonatur == null) return null;
             else donatur = tempDonatur;
@@ -168,7 +168,7 @@ public class KodeBukuServiceImpl implements KodeBukuService {
         if (kodeBuku != null) {
             // Buku buku = bukuRepo.findByIdBuku(dto.getBuku().getId());
             Users donatur = new Users();
-            if (dto.getDonatur().getUsername() != "") {
+            if (dto.getDonatur().getUsername() != "" && dto.getDonatur().getUsername() != null) {
                 Users tempDonatur = userRepo.findByUsername(dto.getDonatur().getUsername());
                 if(tempDonatur == null) return null;
                 else donatur = tempDonatur;

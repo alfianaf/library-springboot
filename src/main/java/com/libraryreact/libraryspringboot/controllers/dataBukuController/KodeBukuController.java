@@ -50,7 +50,7 @@ public class KodeBukuController {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Kode buku gagal ditambahkan! \nCek username donatur ...");
                 response.setData(kodeBukuDto);
-                return ResponseEntity.badRequest().body(response);
+                return ResponseEntity.ok().body(response);
             }
 
         } catch (Exception e) {
@@ -163,7 +163,7 @@ public class KodeBukuController {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("Kode buku gagal diubah! Cek kembali username donatur ...");
                 response.setData(kodeBukuDto);
-                return ResponseEntity.badRequest().body(response);
+                return ResponseEntity.ok().body(response);
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 response.setMessage("Kode buku berhasil diubah!");
