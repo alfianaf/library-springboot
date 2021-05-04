@@ -51,7 +51,6 @@ public class PeminjamanServiceImpl implements PeminjamanService {
     @Override
     public ResponseEntity<?> pengembalianBuku(PeminjamanDto peminjamanDto) {
         StatusMessageDto<Peminjaman> response = new StatusMessageDto<>();
-
         Integer idUser = peminjamanDto.getIdUser();
         Users user = usersRepo.findById(idUser).get();
 
@@ -62,6 +61,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         StatusTransaksi statusTransaksi2 = statusTransaksiRepo.findByName(EStatusTransaksi.SEWA);
         Peminjaman peminjaman = peminjamanRepo.findById(peminjamanDto.getId()).get();
         UserDetail detailUser = userDetailRepo.findDetailByUserId(peminjaman.getUser().getId());
+        KodeBuku kodeBuku = kodeBukuRepo.findByKodeBuku(peminjaman.getKodeBuku().getKodeBuku());
 
         peminjaman.setTanggalPengembalian(Timestamp.from(Instant.now()));
         peminjaman.setPencatat(user);
@@ -98,7 +98,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
         }
         saldoLog.setPeminjaman(peminjaman);
         peminjaman.setFinished(true);
-
+        kodeBuku.setIsAvailable(true);
         peminjamanRepo.save(peminjaman);
         saldoRepo.save(saldoLog);
         userDetailRepo.save(detailUser);
