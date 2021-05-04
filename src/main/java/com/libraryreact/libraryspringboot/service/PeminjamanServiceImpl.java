@@ -85,7 +85,7 @@ public class PeminjamanServiceImpl implements PeminjamanService {
                 response.setData(peminjaman);
                 return ResponseEntity.badRequest().body(response);
             }
-            saldoLog.setKredit(peminjaman.getDenda());
+            saldoLog.setDebit(peminjaman.getDenda());
             saldoLog.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
             detailUser.setSaldo(detailUser.getSaldo() - peminjaman.getDenda());
             saldoLog.setUser(peminjaman.getUser());

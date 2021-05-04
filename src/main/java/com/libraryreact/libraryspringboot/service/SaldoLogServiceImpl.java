@@ -59,7 +59,7 @@ public class SaldoLogServiceImpl implements SaldoLogService {
                 StatusTransaksi topup = statusTransaksiRepository.findByName(EStatusTransaksi.TOPUP);
                 saldoLog.setStatusTransaksi(topup);
 
-                saldoLog.setDebit(saldoDto.getSaldo());
+                saldoLog.setKredit(saldoDto.getSaldo());
                 saldoLog.setSaldo(detailUser.getSaldo() + saldoDto.getSaldo());
                 detailUser.setSaldo(detailUser.getSaldo() + saldoDto.getSaldo());
 
@@ -76,7 +76,7 @@ public class SaldoLogServiceImpl implements SaldoLogService {
                 StatusTransaksi sewa = statusTransaksiRepository.findByName(EStatusTransaksi.SEWA);
                 saldoLog.setStatusTransaksi(sewa);
 
-                saldoLog.setKredit(saldoDto.getSaldo());
+                saldoLog.setDebit(saldoDto.getSaldo());
                 saldoLog.setSaldo(detailUser.getSaldo() - saldoDto.getSaldo());
                 detailUser.setSaldo(detailUser.getSaldo() - saldoDto.getSaldo());
 
@@ -93,7 +93,7 @@ public class SaldoLogServiceImpl implements SaldoLogService {
                 StatusTransaksi denda = statusTransaksiRepository.findByName(EStatusTransaksi.DENDA);
                 saldoLog.setStatusTransaksi(denda);
 
-                saldoLog.setKredit(saldoDto.getSaldo());
+                saldoLog.setDebit(saldoDto.getSaldo());
                 saldoLog.setSaldo(detailUser.getSaldo() - saldoDto.getSaldo());
                 detailUser.setSaldo(detailUser.getSaldo() - saldoDto.getSaldo());
 
