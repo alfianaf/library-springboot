@@ -5,7 +5,9 @@ import java.util.List;
 import com.libraryreact.libraryspringboot.models.dto.StatusMessageDto;
 import com.libraryreact.libraryspringboot.models.dto.dataBukuDto.BukuUsersDto;
 import com.libraryreact.libraryspringboot.models.entity.Peminjaman;
+import com.libraryreact.libraryspringboot.models.entity.SaldoLog;
 import com.libraryreact.libraryspringboot.service.PeminjamanService;
+import com.libraryreact.libraryspringboot.service.SaldoLogService;
 import com.libraryreact.libraryspringboot.service.dataBukuService.BukuUsersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class PeminjamController {
     private BukuUsersService bukuService;
     @Autowired
     private PeminjamanService peminjamanService;
+    @Autowired
+    private SaldoLogService saldoLogService;
 
     // get all book for user
     @GetMapping("/buku/all")
@@ -152,6 +156,29 @@ public class PeminjamController {
         try {
             StatusMessageDto<List<Peminjaman>> response = peminjamanService.riwayatSewaSelesaiByPeminjam(id);
             return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    // get riwayat saldo berdasarkan id user
+    @GetMapping("/riwayat/saldo/{id}")
+    public ResponseEntity<?> getRiwayatSaldo(@PathVariable Integer id){
+        try {
+            StatusMessageDto<List<SaldoLog>> response = new StatusMessageDto<>();
+            List<SaldoLog> list = saldoLogService.getLogSaldoByIdUser(id);
+            if(list == null){
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setMessage("Data tidak ditemukan ... !");
+                response.setData(list);
+                return ResponseEntity.ok().body(response);
+            }
+            else{
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Data berhasil didapatkan ... !");
+                response.setData(list);
+                return ResponseEntity.ok().body(response);
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
