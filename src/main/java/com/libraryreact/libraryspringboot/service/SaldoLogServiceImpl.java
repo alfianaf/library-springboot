@@ -2,6 +2,7 @@ package com.libraryreact.libraryspringboot.service;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -111,6 +112,19 @@ public class SaldoLogServiceImpl implements SaldoLogService {
         saldoLogRepository.save(saldoLog);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public List<SaldoLog> getLogSaldoByIdUser(Integer id) {
+        List<SaldoLog> list = saldoLogRepository.findByIdUser(id);
+
+        if(list!=null){
+            return list;
+        }
+        else{
+            return null;
+        }
+
     }
 
 }
