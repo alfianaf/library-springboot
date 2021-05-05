@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.libraryreact.libraryspringboot.models.dto.dataBukuDto.BukuUsersDto;
 import com.libraryreact.libraryspringboot.models.dto.dataBukuDto.KodeBukuUsersDto;
+import com.libraryreact.libraryspringboot.models.dto.dataBukuDto.PopulerDto;
 import com.libraryreact.libraryspringboot.models.entity.dataBuku.Buku;
 import com.libraryreact.libraryspringboot.models.entity.dataBuku.KodeBuku;
 import com.libraryreact.libraryspringboot.repository.PeminjamanRepository;
@@ -168,6 +169,24 @@ public class BukuUsersServisImpl implements BukuUsersService{
         }
 
         return bukuUsersDtos;
+    }
+
+    @Override
+    public List<PopulerDto> getHotCollections2() {
+        Set<Integer> bukuPopuler = peminjamanRepo.findIdBukuTerpopuler();
+        List<PopulerDto> populerDtos = new ArrayList<>();
+
+        for (Integer idBukuPopuler : bukuPopuler) {
+            Buku buku = bukuRepo.findByIdBuku(idBukuPopuler);
+            Integer total = peminjamanRepo.getTotalPeminjamanByKodeBuku(idBukuPopuler);
+            PopulerDto populerTemp = new PopulerDto();
+            populerTemp.setId(idBukuPopuler);
+            populerTemp.setJudul(buku.getJudul());
+            populerTemp.setTotal(total);
+            populerDtos.add(populerTemp);
+        }
+
+        return populerDtos;
     }
 
     @Override

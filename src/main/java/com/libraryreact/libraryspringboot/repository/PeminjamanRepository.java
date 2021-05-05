@@ -28,4 +28,7 @@ public interface PeminjamanRepository extends JpaRepository<Peminjaman, Integer>
 
     @Query(value = "select kode_buku.id_buku from peminjaman join kode_buku on peminjaman.kode_buku = kode_buku.kode_buku group by id_buku order by count(kode_buku.id_buku) desc limit 6", nativeQuery = true)
     public Set<Integer> findIdBukuTerpopuler();
+
+    @Query(value = "select count(id_buku) from peminjaman join kode_buku on peminjaman.kode_buku = kode_buku.kode_buku join buku on buku.id = kode_buku.id_buku where id_buku = ?", nativeQuery = true)
+    public Integer getTotalPeminjamanByKodeBuku(Integer id);
 }
