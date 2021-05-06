@@ -71,7 +71,7 @@ public class FilesController {
         return responseFiles;
     }
 
-    @GetMapping("/download/{filename:.+}")
+    @GetMapping("/downloadsampul/{filename:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(filename);
