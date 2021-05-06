@@ -18,7 +18,8 @@ public class JwtUtils {
   @Autowired
   private UsersRepository usersRepository;
   private String jwtSecret = "secretKey";
-  private Integer jwtExpirationMS = 9000000;
+  // private Integer jwtExpirationMS = 9000;
+  private Integer jwtExpirationMS = 90000000;
 
   public String generateJwtToken(Authentication authentication) {
 
