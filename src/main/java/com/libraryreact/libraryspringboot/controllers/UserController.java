@@ -57,6 +57,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UsersDto userDto) {
         StatusMessageDto<Users> response = new StatusMessageDto<>();
+        if(userDto.getUsername() == null || userDto.getPassword() == null){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Formulir tidak lengkap ...");
+            return ResponseEntity.badRequest().body(response);
+        }
+       
         // checking user exist or not
         Users user = usersRepository.findByUsername(userDto.getUsername());
         if (user != null) {
@@ -129,37 +135,48 @@ public class UserController {
         Users user = usersRepository.findByUsername(dto.getUsername());
 
         try {
-            if (user.getIsActive().equals(true)) {
-                // autentikasi user
-                Authentication authentication = authManager
-                        .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                // generate token
-                String jwt = jwtUtils.generateJwtToken(authentication);
-                // get user principal
-                UserDetailService userDetailService = (UserDetailService) authentication.getPrincipal();
-                // get role
-                Set<String> roles = userDetailService.getAuthorities().stream().map(role -> role.getAuthority())
-                        .collect(Collectors.toSet());
-                Integer id = jwtUtils.getIdFromToken(jwt);
-
-                response.setStatus(HttpStatus.OK.value());
-                response.setMessage("Login success!");
-                response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles, id));
-
+            if(user == null){
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage("Cek kembali username Anda ...");
                 return ResponseEntity.ok().body(response);
             }
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("User tidak ditemukan");
-            return ResponseEntity.badRequest().body(response);
+            else{
+                if (user.getIsActive().equals(true)) {
+                    // autentikasi user
+                    Authentication authentication = authManager
+                            .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+    
+                    // generate token
+                    String jwt = jwtUtils.generateJwtToken(authentication);
+                    // get user principal
+                    UserDetailService userDetailService = (UserDetailService) authentication.getPrincipal();
+                    // get role
+                    Set<String> roles = userDetailService.getAuthorities().stream().map(role -> role.getAuthority())
+                            .collect(Collectors.toSet());
+                    Integer id = jwtUtils.getIdFromToken(jwt);
+    
+                    response.setStatus(HttpStatus.OK.value());
+                    response.setMessage("Login success!");
+                    response.setData(new JWTResponse(jwt, userDetailService.getUsername(), roles, id));
+    
+                    return ResponseEntity.ok().body(response);
+                }
+                else{
+                    response.setStatus(HttpStatus.BAD_REQUEST.value());
+                    response.setMessage("Akun tidak aktif ...");
+                    return ResponseEntity.ok().body(response);
+                }
+            }
+            
         } catch (Exception e) {
             // response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             // response.setMessage("Error: " + e.getMessage());
             // return
             // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("Username atau Password Salah");
+            // response.setStatus(HttpStatus.BAD_REQUEST.value());
+            // response.setMessage(e.getMessage() + ": Password salah ...");
+            response.setMessage("Password salah ...");
             return ResponseEntity.badRequest().body(response);
         }
 
