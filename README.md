@@ -4,7 +4,9 @@
 Backend ini terhubung pada repository library react js : https://github.com/ulimultia/library_react
 
 # Cara installasi
-- Pertama silahkan download sql yang akan digunakan pada backend ini :
+- Pertama anda sudah harus menginstall xampp terlebih dahulu, untuk installasi xampp dapat mengunjungi https://www.apachefriends.org/download.html
+- Buka program xampp masing2, jalankan fungsi start pada bagian Apache dan MySQL
+- Selanjutnya silahkan download sql yang akan digunakan pada backend ini :
 [db_kreasitech.zip](https://github.com/alfianaf/library-springboot/files/6457541/db_kreasitech.zip)
 - Import db yang sudah didownload pada dbms mysql masing2
 - Anda dapat menjalankan aplikasi Spring Boot dari IDE Anda sebagai aplikasi Java sederhana, namun, Anda perlu mengimpor proyek Anda terlebih dahulu. Langkah-langkah pengimporan akan bervariasi bergantung pada IDE dan sistem build Anda. Kebanyakan IDE dapat mengimpor proyek Maven secara langsung, misalnya pengguna Eclipse dapat memilih Import…​ → Existing Maven Projects dari menu File.
