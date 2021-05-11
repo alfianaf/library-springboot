@@ -17,6 +17,7 @@ Setelah itu pada command line directory terkait, dapat menjalankan
 ```$ mvn spring-boot:run```
 
 Bagi yang sudah menginstall Spring Boot Dashboard pada IDE nya bisa run lewat dashboard masing2
+
 ![image](https://user-images.githubusercontent.com/38254455/117782860-3af0be00-b26c-11eb-9502-bdbf8753fc5d.png)
 
 *disarankan sudah menginstall maven sebelumnya terlebih dahulu*
